@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->timestamp('expiry_date')->nullable();
+            $table->uuid('book_uuid'); // Add UUID field from the book table
+            $table->foreign('book_uuid')->references('uuid')->on('books')->onDelete('cascade');
             $table->timestamps();
         });
     }

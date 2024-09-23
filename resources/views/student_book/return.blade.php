@@ -49,7 +49,7 @@
             </a>
 
             <div>
-                <form id="search-form" class="max-w-md mx-auto" action="{{ route('test-search-search') }}" method="GET">
+                <form id="search-form" class="max-w-md mx-auto" action="{{ route('test-search-book-return') }}" method="GET">
                
 
                     <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -123,7 +123,7 @@
 
                 if (query.length > 0) {
                     $.ajax({
-                        url: "{{ route('test-search-search') }}",
+                        url: "{{ route('test-search-book-return') }}",
                         method: 'GET',
                         data: {
                             query: query

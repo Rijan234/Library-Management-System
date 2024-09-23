@@ -4,6 +4,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\MultipleBook;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReturnBookController;
 use App\Http\Controllers\StudentBook;
 use App\Http\Controllers\StudentBookController;
 use App\Http\Controllers\StudentController;
@@ -31,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/books/create', [MultipleBook::class, 'createMultipleBooks'])->name('books.createMultiple');
     Route::resource('student-book', StudentBookController::class)->names([
         'index'   => 'student-book.index',
-    
+
     ]);
 
     // In web.php
@@ -45,14 +46,12 @@ Route::middleware('auth')->group(function () {
 
 
     // Add these routes to handle the renew and return actions
-Route::get('/student-book/renew/{student}', [StudentBookController::class, 'renew'])->name('student-book.renew');
-Route::get('/student-book/return/{student}', [StudentBookController::class, 'return'])->name('student-book.return');
+    Route::get('/student-book/renew/{student}', [StudentBookController::class, 'renew'])->name('student-book.renew');
+    Route::get('/student-book/return/{student}', [StudentBookController::class, 'return'])->name('student-book.return');
 
     Route::get('/return-book', [StudentBookController::class, 'returnBooks'])->name('returnBooks');
     Route::get('/test-search-search', [StudentBookController::class, 'searchSearch'])->name('test-search-search');
-
-
-
+    Route::get('/test-search-book-return', [ReturnBookController::class, 'searchBooks'])->name('test-search-book-return');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

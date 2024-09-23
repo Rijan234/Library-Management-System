@@ -122,19 +122,19 @@
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                        @php
-    $a = \Carbon\Carbon::now();
-    $b = \Carbon\Carbon::parse($book->pivot->expiry_date);
-    $c = floor($b->diffInDays($a))*3; // Use floor to ensure integer value
-@endphp
+                            @php
+                            $a = \Carbon\Carbon::now();
+                            $b = \Carbon\Carbon::parse($book->pivot->expiry_date);
+                            $c = floor($b->diffInDays($a))*3; // Use floor to ensure integer value
+                            @endphp
 
-@if($c > 0)
-    <span class="text-red-600">Rs.{{ $c }}</span>
-@else
-    <span>-</span>
-@endif
+                            @if($c > 0)
+                            <span class="text-red-600">Rs.{{ $c }}</span>
+                            @else
+                            <span>-</span>
+                            @endif
 
-                            
+
                         </td>
                     </tr>
                     @endforeach

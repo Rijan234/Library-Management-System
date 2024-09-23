@@ -16,6 +16,6 @@ class Book extends Model
      */
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'student_book')   ->withPivot('created_at', 'expiry_date');
+        return $this->belongsToMany(Student::class, 'student_book')   ->withPivot('created_at', 'expiry_date', 'book_uuid');
     }
 }

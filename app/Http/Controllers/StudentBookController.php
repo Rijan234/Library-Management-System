@@ -89,6 +89,7 @@ class StudentBookController extends Controller
         if ($student) {
             // Current timestamp for created_at
             $createdAt = Carbon::now();
+            $book = Book::find($book_id);
 
             // Add 5 days to the current timestamp for expiry_date
             $expiryDate = $createdAt->copy()->addDays(5);
@@ -97,7 +98,8 @@ class StudentBookController extends Controller
             $student->books()->attach($book_id, [
                 'created_at' => $createdAt,
                 'updated_at' => $createdAt, // Optional if you want to set updated_at as well
-                'expiry_date' => $expiryDate
+                'expiry_date' => $expiryDate,
+                'book_uuid' => $book->uuid 
             ]);
 
             return redirect()->back();
