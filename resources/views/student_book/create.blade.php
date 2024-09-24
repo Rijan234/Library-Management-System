@@ -54,100 +54,119 @@
 
         <!-- Main content -->
         <section>
-            <div>
-                <h1>Name: {{ $student->name }}</h1>
-                <h1>Faculty: {{ $student->faculty->name }}</h1>
-                <h1>Phone: {{ $student->phone }}</h1>
+    <table class="min-w-full bg-white border border-gray-200 ">
+        <tr class="border-b border-gray-200 ">
+            <td class="p-2 italic  ml-auto">
                 @php
                 $today = \Carbon\Carbon::now();
                 @endphp
-                <h1>{{ \Carbon\Carbon::now()->toDateString() }}</h1>
-                <!-- to diplay fine -->
+                <h1>Date: {{ \Carbon\Carbon::now()->toDateString() }}</h1>
+                <!-- to display fine -->
+            </td>
+        </tr>
+        <tr class="border-b border-gray-200 ">
+            <td class="p-2">
+                <h1><span class="font-bold">Name:</span>  <span>{{ $student->name }}</span></h1>
+            </td>
+            <td class="p-2">
+                <h1><span class="font-bold">Faculty:</span> <span> {{ $student->faculty->name }}</span></h1>
+            </td>
+        </tr>
+        <tr class="border-b border-gray-200 ">
+            <td class="p-2">
+                <h1> <span class="font-bold"> Phone: </span>  <span>{{ $student->phone }}</span></h1>
+            </td>
+            <td class="p-2">
+                <h1><span class="font-bold">Address:</span> <span>{{ $student->address }}</span></h1>
+            </td>
+        </tr>
+        <tr class="border-b border-gray-200 ">
+            <td class="p-2">
+                <h1><span class="font-bold">No of books Issued:</span> <span id="booksIssued">0</span></h1>
+            </td>
+            <td class="p-2">
+                <h1><span class="font-bold">Fine: Rs. &nbsp;</span><span id="totalFine" class="text-red-600">  &nbsp; &nbsp;0</span></h1>
+            </td>
+        </tr>
+    </table>
+</section>
 
-            </div>
-            <div>
-                <h1>No of Books: 4</h1>
-            </div>
-        </section>
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" data-book-count="{{ $student->books->count() }}">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="p-4">
-                            <div class="flex items-center">
-                                <input id="checkbox-all" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            </div>
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Book name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Issued At
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Expires AT
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Fine
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @if($student->books->isNotEmpty())
-                    @foreach($student->books as $index => $book)
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td class="w-4 p-4">
-                            <div class="flex items-center">
-                                <input id="checkbox-table-{{ $index }}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                    data-book-id="{{ $book->id }}" data-student-id="{{ $student->id }}">
-                                <label for="checkbox-table-{{ $index }}" class="sr-only">checkbox</label>
-                            </div>
-                        </td>
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ $book->name }}<br>
-                        </th>
-                        <td class="px-6 py-4">
-                            @if($book->pivot->created_at)
-                            {{ $book->pivot->created_at->format('Y-m-d') }}
-                            @else
-                            Not Assigned
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            @if($book->pivot->expiry_date)
-                            {{ \Carbon\Carbon::parse($book->pivot->expiry_date)->format('Y-m-d') }}
-                            @else
-                            Not Set
-                            @endif
-                        </td>
-                        <td class="px-6 py-4">
-                            @php
-                            $a = \Carbon\Carbon::now();
-                            $b = \Carbon\Carbon::parse($book->pivot->expiry_date);
-                            $c = floor($b->diffInDays($a))*3; // Use floor to ensure integer value
-                            @endphp
-
-                            @if($c > 0)
-                            <span class="text-red-600">Rs.{{ $c }}</span>
-                            @else
-                            <span>-</span>
-                            @endif
-
-
-                        </td>
-                    </tr>
-                    @endforeach
-
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" id="booksTable">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-all" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Book name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Issued At
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Expires AT
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Fine
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if($student->books->isNotEmpty())
+            @foreach($student->books as $index => $book)
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-table-{{ $index }}" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                            data-book-id="{{ $book->id }}" data-student-id="{{ $student->id }}">
+                        <label for="checkbox-table-{{ $index }}" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ $book->name }}<br>
+                </th>
+                <td class="px-6 py-4">
+                    @if($book->pivot->created_at)
+                    {{ $book->pivot->created_at->format('Y-m-d') }}
                     @else
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td>No books assigned</td>
-                    </tr>
+                    Not Assigned
                     @endif
-                </tbody>
+                </td>
+                <td class="px-6 py-4">
+                    @if($book->pivot->expiry_date)
+                    {{ \Carbon\Carbon::parse($book->pivot->expiry_date)->format('Y-m-d') }}
+                    @else
+                    Not Set
+                    @endif
+                </td>
+                <td class="px-6 py-4">
+                    @php
+                    $a = \Carbon\Carbon::now();
+                    $b = \Carbon\Carbon::parse($book->pivot->expiry_date);
+                    $c = floor($b->diffInDays($a)) * 3; // Use floor to ensure integer value
+                    @endphp
 
-            </table>
-        </div>
+                    @if($c > 0)
+                    <span class="fine-amount text-red-600" data-fine="{{ $c }}">Rs.{{ $c }}</span>
+                    @else
+                    <span class="fine-amount" data-fine="0">-</span>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+
+            @else
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td>No books assigned</td>
+            </tr>
+            @endif
+        </tbody>
+    </table>
+</div>
+
     </section>
 
     <script>
@@ -272,6 +291,22 @@
             }
         });
     </script>
+
+    <!-- to count no of books and determine fine -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const booksIssued = document.querySelectorAll('#booksTable tbody tr').length;
+        const fineElements = document.querySelectorAll('.fine-amount');
+        let totalFine = 0;
+
+        fineElements.forEach(fineElement => {
+            totalFine += parseFloat(fineElement.getAttribute('data-fine'));
+        });
+
+        document.getElementById('booksIssued').innerText = booksIssued;
+        document.getElementById('totalFine').innerText = totalFine;
+    });
+</script>
 
 
 
